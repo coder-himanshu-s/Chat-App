@@ -12,5 +12,5 @@ const router = expres.Router();
 router.route("/register").post(register);
 router.route("/login").post(login);
 router.route("/logout").get(logout);
-router.route("/other").get( authenticate,getOtherUsers);
+router.route("/other").get(authenticate, getOtherUsers);
 export default router;
