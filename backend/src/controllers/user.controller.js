@@ -27,9 +27,11 @@ export const register = asyncHandler(async (req, res) => {
     profilePhoto: gender === "Male" ? maleProfilePhoto : femaleProfilePhoto,
     gender,
   });
+  const userWithoutPassword = user.toObject();
+  delete userWithoutPassword.password;
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "User registered successfully"));
+    .json(new ApiResponse(200, userWithoutPassword, "User registered successfully"));
 });
 
 export const login = asyncHandler(async (req, res) => {
@@ -37,31 +39,31 @@ export const login = asyncHandler(async (req, res) => {
   if (!userName || !password) {
     throw new ApiError(400, "All fields are required");
   }
-  const user = await User.findOne({ userName }).select("+password");
-  if (!user) {
+  const userWithPass = await User.findOne({ userName }).select("+password");
+  if (!userWithPass) {
     throw new ApiError(400, "User not found");
   }
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, userWithPass.password);
   if (!isMatch) {
     throw new ApiError(400, "Enter valid credentials");
   }
 
   const accessToken = jwt.sign(
-    { id: user._id },
+    { id: userWithPass._id },
     process.env.JWT_ACCESS_SECRET,
     {
       expiresIn: "30m",
     }
   );
   const refreshToken = jwt.sign(
-    { id: user._id },
+    { id: userWithPass._id },
     process.env.JWT_REFRESH_SECRET,
     {
       expiresIn: "2d",
     }
   );
-  const userWithoutPassword = user.toObject();
-  delete userWithoutPassword.password;
+  const user = userWithPass.toObject();
+  delete user.password;
   return res
     .status(200)
     .cookie("refreshToken", refreshToken, {
@@ -73,7 +75,7 @@ export const login = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { accessToken, userWithoutPassword },
+        { accessToken, user },
         `Welcome ${user.userName}`
       )
     );
