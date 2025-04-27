@@ -71,6 +71,11 @@ export const login = asyncHandler(async (req, res) => {
       secure: true,
       sameSite: "none",
       maxAge: 1000 * 60 * 60 * 24 * 2,
+    }).cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 30,
     })
     .json(
       new ApiResponse(
@@ -84,7 +89,7 @@ export const login = asyncHandler(async (req, res) => {
 export const logout = asyncHandler(async (req, res) => {
   const token = req.cookies.refreshToken;
   if (!token) {
-    return res.status(400).json(new ApiResponse(400, {}, "Alredy logged out"));
+    return res.status(200).json(new ApiResponse(200, {}, "Logged out Successful"));
   }
   res.clearCookie("refreshToken", {
     httpOnly: true,
