@@ -18,7 +18,6 @@ const Signup = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log(`request is going with data`, user);
       const res = await axios.post(
         "http://localhost:3000/api/v1/user/register",
         user,
@@ -29,7 +28,6 @@ const Signup = () => {
           withCredentials: true,
         }
       );
-      console.log("Response:", res);
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/login")

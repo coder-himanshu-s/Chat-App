@@ -2,18 +2,23 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import axios from "axios";
+import { setAuthUser } from "../redux/userSlice";
 const Signup = () => {
+
   const [user, setUser] = useState({
     userName: "",
     password: "",
     confirmPassword: "",
   });
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log(`request is going with data`, user);
       if (user?.password !== user?.confirmPassword) {
         toast.error("Password and confirm Password do not match");
         return;
@@ -28,10 +33,13 @@ const Signup = () => {
           withCredentials: true,
         }
       );
-      console.log("Response:", res);
       if (res.data.success) {
+        console.log(res.data.data);
         toast.success(res.data.message);
+        localStorage.setItem('accessToken', res.data.data.accessToken);
         navigate("/");
+        // console.log(res.data?.data?.user);
+        dispatch(setAuthUser(res.data?.data?.user))
       } else {
         toast.error(res.data.message);
       }
@@ -42,6 +50,7 @@ const Signup = () => {
       );
     }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200 px-4 sm:px-6 lg:px-8">
       <div className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 backdrop-blur-sm bg-opacity-80 border border-gray-200">
