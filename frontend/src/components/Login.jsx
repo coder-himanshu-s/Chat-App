@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setAuthUser } from "../redux/userSlice";
-const Signup = () => {
 
+const Signup = () => {
   const [user, setUser] = useState({
     userName: "",
     password: "",
@@ -15,102 +14,99 @@ const Signup = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (user.password !== user.confirmPassword) {
+      toast.error("Password and confirm password do not match");
+      return;
+    }
+
     try {
-      if (user?.password !== user?.confirmPassword) {
-        toast.error("Password and confirm Password do not match");
-        return;
-      }
       const res = await axios.post(
         "http://localhost:3000/api/v1/user/login",
         user,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
+
       if (res.data.success) {
-        console.log(res.data.data);
         toast.success(res.data.message);
-        localStorage.setItem('accessToken', res.data.data.accessToken);
+        localStorage.setItem("accessToken", res.data.data.accessToken);
+        dispatch(setAuthUser(res.data.data.user));
         navigate("/");
-        // console.log(res.data?.data?.user);
-        dispatch(setAuthUser(res.data?.data?.user))
       } else {
         toast.error(res.data.message);
       }
-    } catch (error) {
-      console.log(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
+    } catch (err) {
+      toast.error("Something went wrong!");
+      console.error(err.response ? err.response.data : err.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200 px-4 sm:px-6 lg:px-8">
-      <div className="w-full sm:max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 backdrop-blur-sm bg-opacity-80 border border-gray-200">
-        <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-800 mb-6">
+    <div className="flex-auto">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200 dark:from-gray-800 dark:to-gray-900 px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 border border-gray-200 dark:border-gray-700">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-800 dark:text-white mb-6">
           Log In
         </h1>
         <form onSubmit={onSubmitHandler}>
+
           {/* Username */}
           <div className="mb-4">
             <label className="label">
-              <span className="label-text text-base sm:text-lg text-gray-700">
+              <span className="label-text text-gray-700 dark:text-gray-300 text-base sm:text-lg">
                 Username
               </span>
             </label>
             <input
-              className="w-full input input-bordered input-primary text-sm sm:text-base"
               type="text"
               placeholder="_peter12"
               value={user.userName}
               onChange={(e) => setUser({ ...user, userName: e.target.value })}
+              className="input input-bordered input-primary w-full dark:bg-gray-700 dark:text-white"
             />
           </div>
 
           {/* Password */}
           <div className="mb-4">
             <label className="label">
-              <span className="label-text text-base sm:text-lg text-gray-700">
+              <span className="label-text text-gray-700 dark:text-gray-300 text-base sm:text-lg">
                 Password
               </span>
             </label>
             <input
-              className="w-full input input-bordered input-primary text-sm sm:text-base"
               type="password"
               placeholder="********"
               value={user.password}
               onChange={(e) => setUser({ ...user, password: e.target.value })}
+              className="input input-bordered input-primary w-full dark:bg-gray-700 dark:text-white"
             />
           </div>
 
           {/* Confirm Password */}
           <div className="mb-4">
             <label className="label">
-              <span className="label-text text-base sm:text-lg text-gray-700">
+              <span className="label-text text-gray-700 dark:text-gray-300 text-base sm:text-lg">
                 Confirm Password
               </span>
             </label>
             <input
-              className="w-full input input-bordered input-primary text-sm sm:text-base"
               type="password"
               placeholder="********"
               value={user.confirmPassword}
-              onChange={(e) =>
-                setUser({ ...user, confirmPassword: e.target.value })
-              }
+              onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
+              className="input input-bordered input-primary w-full dark:bg-gray-700 dark:text-white"
             />
           </div>
 
-          <p className="text-center text-sm text-gray-600 mb-4">
-            Already have an account?
-            <Link to="/signup" className="text-blue-600 hover:underline ml-1">
+          {/* Signup Link */}
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Don't have an account?
+            <Link to="/signup" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">
               Sign Up
             </Link>
           </p>
@@ -118,13 +114,15 @@ const Signup = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="btn btn-primary w-full rounded-md shadow hover:shadow-lg text-sm sm:text-base"
+            className="btn btn-primary w-full rounded-md text-white shadow hover:shadow-lg text-sm sm:text-base"
           >
             Log In
           </button>
         </form>
       </div>
     </div>
+    </div>
+    
   );
 };
 

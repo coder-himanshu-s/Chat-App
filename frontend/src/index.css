@@ -1,11 +1,17 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background: url('./assets/bg.jpg');
-    background-size:cover;
-    background-position: center;
-    background-repeat: no-repeat;
+body {
+  background: url('./assets/bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent global scrollbars */
 }

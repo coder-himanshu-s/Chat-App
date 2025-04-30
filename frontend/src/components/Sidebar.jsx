@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { ImSearch } from "react-icons/im";
 import OtherUsers from "./OtherUsers";
 import axios from "axios";
-import Toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import Toast, { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setAuthUser } from "../redux/userSlice";
+import { setAuthUser, setOtherUsers } from "../redux/userSlice";
 const Sidebar = () => {
+  const [search, setSearch] = useState("");
+  const {otherUsers}  = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const logoutHandler = async () => {
     const res = await axios.get("http://localhost:3000/api/v1/user/logout", {
       headers: {
@@ -30,12 +33,29 @@ const Sidebar = () => {
       Toast.error(res.data.message || "Logout failed!");
     }
   };
+
+  const searchSubmitHandler = (e) => {
+    e.preventDefault();
+    const chatUser = otherUsers?.find((user)=>user?.fullName?.toLowerCase().includes(search.toLowerCase()))
+    if( chatUser){
+        dispatch(setOtherUsers(chatUser))
+    }else{
+      toast.error("User not found!")
+    }
+  };
+
   return (
     <div className="border-r border-slate-500 p-4 ">
-      <form action="" className="flex items-center gap-2">
+      <form
+        action=""
+        onSubmit={searchSubmitHandler}
+        className="flex items-center gap-2"
+      >
         <input
           type="text"
           placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           className="input input-bordered rounded-full"
         />
         <button type="submit" className="btn bg-slate-500">

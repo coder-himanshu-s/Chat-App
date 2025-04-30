@@ -15,7 +15,7 @@ const OtherUsers = () => {
   return (
     <div className="h-64 overflow-auto border border-gray-300 rounded-md shadow-sm bg-gray-500">
       {
-        otherUsers?.map((user)=>{
+        otherUsers && otherUsers?.map((user)=>{
           return(
             <OtherUser key={user._id} user={user}/>
           )
