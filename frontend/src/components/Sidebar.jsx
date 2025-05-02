@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { setAuthUser, setOtherUsers } from "../redux/userSlice";
 const Sidebar = () => {
   const [search, setSearch] = useState("");
-  const {otherUsers}  = useSelector((store) => store.user);
+  const { otherUsers } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,11 +36,13 @@ const Sidebar = () => {
 
   const searchSubmitHandler = (e) => {
     e.preventDefault();
-    const chatUser = otherUsers?.find((user)=>user?.fullName?.toLowerCase().includes(search.toLowerCase()))
-    if( chatUser){
-        dispatch(setOtherUsers(chatUser))
-    }else{
-      toast.error("User not found!")
+    const chatUser = otherUsers?.find((user) =>
+      user?.fullName?.toLowerCase().includes(search.toLowerCase())
+    );
+    if (chatUser) {
+      dispatch(setOtherUsers(chatUser));
+    } else {
+      toast.error("User not found!");
     }
   };
 
