@@ -35,6 +35,7 @@ const Signup = () => {
       if (res.data.success) {
         toast.success(res.data.message);
         localStorage.setItem("accessToken", res.data.data.accessToken);
+        console.log("from login.jsx",res?.data)
         dispatch(setAuthUser(res.data.data.user));
         navigate("/");
       } else {

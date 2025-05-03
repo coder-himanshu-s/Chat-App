@@ -10,7 +10,7 @@ const OtherUser = ({ user }) => {
   const selectedUserHandler = (user) => {
     dispatch(setSelectedUser(user));
   };
-  
+  console.log("from otheruser ",user)
   return (
     <>
       <div

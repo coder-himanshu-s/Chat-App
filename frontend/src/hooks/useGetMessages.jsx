@@ -26,8 +26,8 @@ const useGetMessages = () => {
           }
         );
         // console.log(res);
-        console.log(res?.data?.data.messages);
-        dispatch(setMessages(res?.data?.data.messages))
+        console.log(res?.data?.data?.messages);
+        dispatch(setMessages(res?.data?.data?.messages || []))
       } catch (error) {
         console.log(error);
       }

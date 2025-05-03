@@ -24,8 +24,9 @@ const SendInput = () => {
           withCredentials: true,
         }
       );
-
-      dispatch(setMessages([...messages, res?.data?.data]));
+      console.log("from sendinput", res?.data);
+      // Ensure messages is an array before updating
+      dispatch(setMessages([...(messages || []), res?.data?.data]));
       setMessage("");
     } catch (error) {
       console.log(error);
@@ -33,7 +34,10 @@ const SendInput = () => {
   };
 
   return (
-    <form className="flex items-center px-4 py-3 bg-white dark:bg-gray-800 rounded-b-lg" onSubmit={onSubmitHandler}>
+    <form
+      className="flex items-center px-4 py-3 bg-white dark:bg-gray-800 rounded-b-lg"
+      onSubmit={onSubmitHandler}
+    >
       <input
         type="text"
         value={message}

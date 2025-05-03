@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Chat } from "../models/chat.model.js";
 import { Message } from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../../socket/socket.js";
 
 export const sendMessage = asyncHandler(async (req, res) => {
     const senderId = req.user._id;
@@ -29,6 +30,11 @@ export const sendMessage = asyncHandler(async (req, res) => {
     }
 
     await getChat.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage", newMessage)
+    }
 
     return res.status(201).json(new ApiResponse(201, newMessage, "Message sent successfully"))
 
