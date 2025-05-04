@@ -7,6 +7,7 @@ import { setMessages } from "../redux/messageSlice";
 const SendInput = () => {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const { selectedUser } = useSelector((store) => store.user);
   const receiverId = selectedUser?._id;
   const { messages } = useSelector((store) => store.message);
@@ -15,7 +16,7 @@ const SendInput = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `http://localhost:3000/api/v1/message/send/${receiverId}`,
+        `${API_URL}/api/v1/message/send/${receiverId}`,
         { message },
         {
           headers: {

@@ -11,7 +11,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -24,7 +24,7 @@ const Signup = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/v1/user/login",
+         `${API_URL}/api/v1/user/login`,
         user,
         {
           headers: { "Content-Type": "application/json" },

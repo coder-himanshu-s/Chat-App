@@ -6,7 +6,7 @@ import { setMessages } from "../redux/messageSlice";
 const useGetMessages = () => {
   const { selectedUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
 
 
   useEffect(() => {
@@ -17,7 +17,7 @@ const useGetMessages = () => {
       }
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/v1/message/getm/${selectedUser?._id}`,
+          `${API_URL}/api/v1/message/getm/${selectedUser?._id}` ,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,

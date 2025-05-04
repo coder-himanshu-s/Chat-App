@@ -9,10 +9,10 @@ const Navbar = () => {
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const handleLogout = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/user/logout", {
+      const res = await axios.get( `${API_URL}/api/v1/user/logout`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },

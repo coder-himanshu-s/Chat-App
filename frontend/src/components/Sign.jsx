@@ -12,7 +12,7 @@ const Signup = () => {
     gender: "",
   });
   const navigate = useNavigate();
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
   const handleCheck = (gender) => {
     setUser({ ...user, gender: gender });
   };
@@ -21,7 +21,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/v1/user/register",
+        `${API_URL}/api/v1/user/register`,
         user,
         {
           headers: {
