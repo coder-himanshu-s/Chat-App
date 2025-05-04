@@ -7,7 +7,7 @@ import { setMessages } from "../redux/messageSlice";
 const SendInput = () => {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
-  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:3000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const { selectedUser } = useSelector((store) => store.user);
   const receiverId = selectedUser?._id;
   const { messages } = useSelector((store) => store.message);

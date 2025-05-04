@@ -11,7 +11,9 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:3000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+  // console.log(import.meta.env.VITE_API_URL)
+  console.log("from login",API_URL);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
