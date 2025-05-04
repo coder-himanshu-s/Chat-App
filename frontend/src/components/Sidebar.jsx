@@ -6,6 +6,7 @@ import Toast, { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAuthUser, setOtherUsers } from "../redux/userSlice";
+
 const Sidebar = () => {
   const [search, setSearch] = useState("");
   const { otherUsers } = useSelector((store) => store.user);
@@ -19,7 +20,6 @@ const Sidebar = () => {
       },
       withCredentials: true,
     });
-    console.log(res);
     if (res.data.success) {
       // 1. Clear localStorage
       localStorage.removeItem("accessToken");
@@ -48,7 +48,6 @@ const Sidebar = () => {
 
   return (
     <div className="h-full flex flex-col border-r border-slate-500 p-4">
-      
       {/* Fixed Search Bar at the Top */}
       <form onSubmit={searchSubmitHandler} className="flex items-center gap-2 mb-2">
         <input
@@ -62,23 +61,22 @@ const Sidebar = () => {
           <ImSearch className="w-5 h-5" />
         </button>
       </form>
-  
+
       <div className="divider my-2" />
-  
+
       {/* Scrollable User List (fills all available space) */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 o">
         <OtherUsers />
       </div>
-  
+
       {/* Fixed Logout Button at the Bottom */}
-      <div className="mt-4">
-        <button className="btn btn-sm w-full" onClick={logoutHandler}>
+      <div className="mb-3 mt-2">
+        <button className="btn btn-md w-full btn-secondary" onClick={logoutHandler}>
           Log Out
         </button>
       </div>
     </div>
   );
-  
 };
 
 export default Sidebar;

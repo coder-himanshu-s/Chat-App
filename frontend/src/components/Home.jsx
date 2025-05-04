@@ -8,8 +8,8 @@ const Home = () => {
       {/* 4rem is 64px – height of the fixed navbar */}
       <div className="flex w-full max-w-5xl h-full rounded-lg overflow-hidden shadow-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
         
-        {/* Sidebar: scrollable */}
-        <div className="w-1/3 h-full overflow-y-auto border-r border-gray-300 dark:border-gray-700">
+        {/* Sidebar: fixed width */}
+        <div className="w-1/3 h-full border-r border-gray-300 dark:border-gray-700">
           <Sidebar />
         </div>
 
@@ -22,6 +22,5 @@ const Home = () => {
     </div>
   );
 };
-
 
 export default Home;
