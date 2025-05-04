@@ -27,10 +27,11 @@ const router = createBrowserRouter(
 function App() {
   const { authUser } = useSelector((store) => store.user);
   const { socket } = useSelector((store) => store.socket);
+  const socketURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const dispatch = useDispatch();
   useEffect(() => {
     if (authUser) {
-      const socketio = io("http://localhost:3000", {
+      const socketio = io(socketURL, {
         query: {
           userId: authUser._id,
         },
