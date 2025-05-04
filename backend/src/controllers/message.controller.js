@@ -29,8 +29,9 @@ export const sendMessage = asyncHandler(async (req, res) => {
         getChat.messages.push(newMessage._id)
     }
 
-    await getChat.save();
-
+    // await getChat.save();
+    await Promise.all([getChat.save(), newMessage.save()])
+    
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
         io.to(receiverSocketId).emit("newMessage", newMessage)
