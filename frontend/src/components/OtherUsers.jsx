@@ -13,7 +13,7 @@ const OtherUsers = () => {
   }
 
   return (
-    <div className="h-64 overflow-auto border border-gray-300 rounded-md shadow-sm bg-gray-500">
+    <div className="overflow-y-auto max-h-[calc(100vh-12rem)] border border-gray-300 rounded-md shadow-sm bg-gray-500">
       {
         otherUsers && otherUsers?.map((user)=>{
           return(

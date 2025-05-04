@@ -47,32 +47,38 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="border-r border-slate-500 p-4 ">
-      <form
-        action=""
-        onSubmit={searchSubmitHandler}
-        className="flex items-center gap-2"
-      >
+    <div className="h-full flex flex-col border-r border-slate-500 p-4">
+      
+      {/* Fixed Search Bar at the Top */}
+      <form onSubmit={searchSubmitHandler} className="flex items-center gap-2 mb-2">
         <input
           type="text"
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="input input-bordered rounded-full"
+          className="input input-bordered rounded-full w-full"
         />
         <button type="submit" className="btn bg-slate-500">
-          <ImSearch className="width-6 height-6 outline-none" />
+          <ImSearch className="w-5 h-5" />
         </button>
       </form>
-      <div className="divider px-3"> </div>
-      <OtherUsers />
-      <div className="mt-2">
-        <button className="btn btn-sm" onClick={logoutHandler}>
+  
+      <div className="divider my-2" />
+  
+      {/* Scrollable User List (fills all available space) */}
+      <div className="flex-1 overflow-y-auto">
+        <OtherUsers />
+      </div>
+  
+      {/* Fixed Logout Button at the Bottom */}
+      <div className="mt-4">
+        <button className="btn btn-sm w-full" onClick={logoutHandler}>
           Log Out
         </button>
       </div>
     </div>
   );
+  
 };
 
 export default Sidebar;
