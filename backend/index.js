@@ -1,11 +1,10 @@
-
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./src/db/index.js";
 import userRoutes from "./src/routes/user.routes.js";
 import messageRoutes from "./src/routes/message.routes.js";
-import { app, server } from "./socket/socket.js"; 
+import { app, server } from "./socket/socket.js";
 import express from "express";
 dotenv.config();
 
@@ -13,12 +12,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://chat-app-2-l366.onrender.com",
+];
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL ||"http://localhost:5173",
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
 app.use(cors(corsOptions));
-
 
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/message", messageRoutes);
