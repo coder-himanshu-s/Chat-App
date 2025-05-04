@@ -11,7 +11,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:3000";
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

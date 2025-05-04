@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setOtherUsers } from "../redux/userSlice";
 const useGetOtherUsers = () => {
   const dispatch = useDispatch();
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:3000";
   useEffect(() => {
     const fetchUsers = async () => {
       try {

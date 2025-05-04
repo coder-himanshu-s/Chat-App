@@ -10,7 +10,7 @@ import { setAuthUser, setOtherUsers } from "../redux/userSlice";
 const Sidebar = () => {
   const [search, setSearch] = useState("");
   const { otherUsers } = useSelector((store) => store.user);
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000";
+  const API_URL = import.meta.env.REACT_APP_API_URL || "http://localhost:3000";
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
