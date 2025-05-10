@@ -10,15 +10,12 @@ const Message = () => {
   );
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   return () => dispatch(setSelectedUser(null));
-  // }, []);
   const isOnline = onlineUsers?.includes(selectedUser?._id);
 
   return (
     <>
       {selectedUser !== null ? (
-        <div className="flex flex-col min-w-[350px] sm:min-w-[550px] bg-white dark:bg-gray-800 rounded-lg shadow-lg h-full max-h-screen">
+        <div className="flex flex-col bg-white dark:bg-gray-800 rounded-lg shadow-lg h-full">
           {/* Fixed Header */}
           <div className="flex gap-3 items-center bg-zinc-800 text-white p-4 rounded-t-lg sticky top-0 z-10">
             <div className={`avatar ${isOnline ? "online" : ""}`}>

@@ -7,39 +7,41 @@ import { getReceiverSocketId, io } from "../../socket/socket.js";
 export const sendMessage = asyncHandler(async (req, res) => {
     const senderId = req.user._id;
     const receiverId = req.params.id;
-    const { message } = req.body;
-
+    const { message, file } = req.body;
+  
     let getChat = await Chat.findOne({
-        participants: { $all: [senderId, receiverId] },
+      participants: { $all: [senderId, receiverId] },
     });
-
+  
     if (!getChat) {
-        getChat = await Chat.create({
-            participants: [senderId, receiverId],
-        });
+      getChat = await Chat.create({
+        participants: [senderId, receiverId],
+      });
     }
-
+  
     const newMessage = await Message.create({
-        senderId,
-        receiverId,
-        message,
+      senderId,
+      receiverId,
+      message,
+      file, // ✅ added
     });
-
+  
     if (newMessage) {
-        getChat.messages.push(newMessage._id)
+      getChat.messages.push(newMessage._id);
     }
-
-    // await getChat.save();
-    await Promise.all([getChat.save(), newMessage.save()])
-    
+  
+    await Promise.all([getChat.save(), newMessage.save()]);
+  
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
-        io.to(receiverSocketId).emit("newMessage", newMessage)
+      io.to(receiverSocketId).emit("newMessage", newMessage);
     }
-
-    return res.status(201).json(new ApiResponse(201, newMessage, "Message sent successfully"))
-
-});
+  
+    return res
+      .status(201)
+      .json(new ApiResponse(201, newMessage, "Message sent successfully"));
+  });
+  
 
 export const getMessage = asyncHandler(async (req, res) => {
     const receiverId = req.params.id;
