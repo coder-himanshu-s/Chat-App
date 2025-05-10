@@ -5,7 +5,8 @@ import axios from "axios";
 import Toast, { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setAuthUser, setOtherUsers } from "../redux/userSlice";
+import { setAuthUser, setOtherUsers, setSelectedUser } from "../redux/userSlice";
+import { setMessages } from "../redux/messageSlice";
 
 const Sidebar = () => {
   const [search, setSearch] = useState("");
@@ -26,6 +27,9 @@ const Sidebar = () => {
       localStorage.removeItem("accessToken");
       // 2. Clear redux user state
       dispatch(setAuthUser(null));
+      dispatch(setOtherUsers(null));
+      dispatch(setSelectedUser(null))
+      dispatch(setMessages([]))
       // 3. Navigate to login page
       navigate("/login");
       // 4. Toast success
