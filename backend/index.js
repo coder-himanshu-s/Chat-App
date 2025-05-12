@@ -8,7 +8,7 @@ import messageRoutes from "./src/routes/message.routes.js";
 import { app, server } from "./socket/socket.js";
 import express from "express";
 import uploadRoutes from "./src/routes/upload.routes.js";
-
+import errorHandler from "./src/middlewares/error.middleware.js";
 dotenv.config();
 
 app.use(express.json());
@@ -30,7 +30,7 @@ app.use(cors(corsOptions));
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/message", messageRoutes);
 app.use("/api/upload", uploadRoutes);
-
+app.use(errorHandler);
 app.get("/", (req, res) => {
   res.send("Hello this is home to your server");
 });

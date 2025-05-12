@@ -11,14 +11,31 @@ const Signup = () => {
     confirmPassword: "",
     gender: "",
   });
+  const [loading, setLoading] = useState(false); // <-- Loading state added
+
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
   const handleCheck = (gender) => {
-    setUser({ ...user, gender: gender });
+    setUser({ ...user, gender });
   };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    
+    // Check for empty fields
+    if (!user.fullName || !user.userName || !user.password || !user.confirmPassword || !user.gender) {
+      toast.error("All fields are required!");
+      return;
+    }
+
+    if (user.password !== user.confirmPassword) {
+      toast.error("Password and Confirm Password do not match!");
+      return;
+    }
+
+    setLoading(true); // Start loading
+
     try {
       const res = await axios.post(
         `${API_URL}/api/v1/user/register`,
@@ -30,24 +47,19 @@ const Signup = () => {
           withCredentials: true,
         }
       );
+      console.log("from signup", res);
+      
       if (res.data.success) {
         toast.success(res.data.message);
-        navigate("/login");
+        navigate("/login"); // Navigate to login after successful registration
       } else {
-        toast.error(res.data.message);
+        toast.error(res.data.error || "Something went wrong");
       }
-      setUser({
-        fullName: "",
-        userName: "",
-        password: "",
-        confirmPassword: "",
-        gender: "",
-      });
     } catch (error) {
-      console.log(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
+      console.log("Error:", error.response ? error.response.data : error.message);
+      toast.error(error.response?.data?.message || "Something went wrong!");
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -177,9 +189,10 @@ const Signup = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="btn btn-primary w-full rounded-md text-white shadow hover:shadow-lg text-sm sm:text-base"
+              disabled={loading}
+              className={`btn btn-primary w-full rounded-md text-white shadow hover:shadow-lg text-sm sm:text-base ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              Sign Up
+              {loading ? "Signing up..." : "Sign Up"}
             </button>
           </form>
         </div>

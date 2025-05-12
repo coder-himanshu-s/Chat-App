@@ -41,7 +41,8 @@ const Sidebar = () => {
 
   const searchSubmitHandler = (e) => {
     e.preventDefault();
-    const chatUser = otherUsers?.find((user) =>
+    const usersArray = Array.isArray(otherUsers) ? otherUsers : [otherUsers];
+    const chatUser = usersArray?.find((user) =>
       user?.fullName?.toLowerCase().includes(search.toLowerCase())
     );
     if (chatUser) {
