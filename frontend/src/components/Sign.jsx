@@ -65,14 +65,14 @@ const Signup = () => {
 
   return (
     <div className="flex-auto">
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200 dark:from-gray-800 dark:to-gray-900 px-4">
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200 dark:from-gray-800 dark:to-gray-900 px-4 py-8">
         <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 border border-gray-200 dark:border-gray-700">
           <h1 className="text-3xl sm:text-4xl font-bold text-center text-blue-800 dark:text-white mb-6">
             Sign Up
           </h1>
-          <form onSubmit={onSubmitHandler}>
+          <form onSubmit={onSubmitHandler} className="space-y-4">
             {/* Full Name */}
-            <div className="mb-4">
+            <div>
               <label className="label">
                 <span className="label-text text-base sm:text-lg text-gray-700 dark:text-gray-300">
                   Full Name
@@ -84,11 +84,12 @@ const Signup = () => {
                 placeholder="Peter Parker"
                 value={user.fullName}
                 onChange={(e) => setUser({ ...user, fullName: e.target.value })}
+                required
               />
             </div>
 
             {/* Username */}
-            <div className="mb-4">
+            <div>
               <label className="label">
                 <span className="label-text text-base sm:text-lg text-gray-700 dark:text-gray-300">
                   Username
@@ -100,11 +101,12 @@ const Signup = () => {
                 placeholder="_peter12"
                 value={user.userName}
                 onChange={(e) => setUser({ ...user, userName: e.target.value })}
+                required
               />
             </div>
 
             {/* Password */}
-            <div className="mb-4">
+            <div>
               <label className="label">
                 <span className="label-text text-base sm:text-lg text-gray-700 dark:text-gray-300">
                   Password
@@ -117,11 +119,12 @@ const Signup = () => {
                 value={user.password}
                 minLength={6}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
+                required
               />
             </div>
 
             {/* Confirm Password */}
-            <div className="mb-4">
+            <div>
               <label className="label">
                 <span className="label-text text-base sm:text-lg text-gray-700 dark:text-gray-300">
                   Confirm Password
@@ -136,42 +139,46 @@ const Signup = () => {
                 onChange={(e) =>
                   setUser({ ...user, confirmPassword: e.target.value })
                 }
+                required
               />
             </div>
 
             {/* Gender */}
-            <div className="mb-6">
+            <div>
               <span className="label-text text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-2 block">
                 Gender
               </span>
               <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0">
                 <label className="label cursor-pointer flex items-center space-x-2">
-                  <span className="text-blue-700 font-medium">Male</span>
+                  <span className="text-blue-700 dark:text-blue-400 font-medium">Male</span>
                   <input
                     type="radio"
                     name="gender"
                     value="Male"
                     className="radio radio-info"
+                    checked={user.gender === "Male"}
                     onChange={() => handleCheck("Male")}
                   />
                 </label>
                 <label className="label cursor-pointer flex items-center space-x-2">
-                  <span className="text-pink-600 font-medium">Female</span>
+                  <span className="text-pink-600 dark:text-pink-400 font-medium">Female</span>
                   <input
                     type="radio"
                     name="gender"
                     value="Female"
                     className="radio radio-info"
+                    checked={user.gender === "Female"}
                     onChange={() => handleCheck("Female")}
                   />
                 </label>
                 <label className="label cursor-pointer flex items-center space-x-2">
-                  <span className="text-purple-700 font-medium">Others</span>
+                  <span className="text-purple-700 dark:text-purple-400 font-medium">Others</span>
                   <input
                     type="radio"
                     name="gender"
                     value="Others"
                     className="radio radio-info"
+                    checked={user.gender === "Others"}
                     onChange={() => handleCheck("Others")}
                   />
                 </label>
@@ -179,7 +186,7 @@ const Signup = () => {
             </div>
 
             {/* Login Link */}
-            <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400 pt-2">
               Already have an account?
               <Link to="/login" className="text-blue-600 dark:text-blue-400 hover:underline ml-1">
                 Login
@@ -190,7 +197,7 @@ const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`btn btn-primary w-full rounded-md text-white shadow hover:shadow-lg text-sm sm:text-base ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`btn btn-primary w-full rounded-md text-white shadow-lg hover:shadow-xl text-sm sm:text-base font-semibold py-3 mt-4 ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {loading ? "Signing up..." : "Sign Up"}
             </button>

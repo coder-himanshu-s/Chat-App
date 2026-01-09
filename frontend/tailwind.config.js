@@ -4,9 +4,17 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class', // Enable class-based dark mode
   theme: {
     extend: {},
   },
   plugins: [require("daisyui")],
+  daisyui: {
+    themes: ['light', 'dark'],
+    darkTheme: 'dark',
+    base: true,
+    styled: true,
+    utils: true,
+  },
 }
 

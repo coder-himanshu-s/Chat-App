@@ -5,13 +5,12 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setAuthUser } from "../redux/userSlice";
 
-const Signup = () => {
+const Login = () => {
   const [user, setUser] = useState({
     userName: "",
     password: "",
-    confirmPassword: "",
   });
-  const [loading, setLoading] = useState(false); // <-- Loading state added
+  const [loading, setLoading] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const navigate = useNavigate();
@@ -20,16 +19,16 @@ const Signup = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    if (user.password !== user.confirmPassword) {
-      toast.error("Password and confirm password do not match");
+    if (!user.userName || !user.password) {
+      toast.error("Please fill in all fields");
       return;
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
       const res = await axios.post(
-        `${API_URL}/api/v1/user/login`,  // Ensure the URL is correct for login
+        `${API_URL}/api/v1/user/login`,
         user,
         {
           headers: { "Content-Type": "application/json" },
@@ -46,12 +45,11 @@ const Signup = () => {
         toast.error(res.data.message || "An error occurred, please try again");
       }
     } catch (err) {
-      // Handle API errors (e.g., User not found or invalid credentials)
       const errorMessage = err.response?.data?.message || err.message || "Something went wrong!";
-      toast.error(errorMessage);  // Show the error message returned from the backend
+      toast.error(errorMessage);
       console.error(err.response ? err.response.data : err.message);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
@@ -76,6 +74,7 @@ const Signup = () => {
                 value={user.userName}
                 onChange={(e) => setUser({ ...user, userName: e.target.value })}
                 className="input input-bordered input-primary w-full dark:bg-gray-700 dark:text-white"
+                required
               />
             </div>
 
@@ -92,22 +91,7 @@ const Signup = () => {
                 value={user.password}
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                 className="input input-bordered input-primary w-full dark:bg-gray-700 dark:text-white"
-              />
-            </div>
-
-            {/* Confirm Password */}
-            <div className="mb-4">
-              <label className="label">
-                <span className="label-text text-gray-700 dark:text-gray-300 text-base sm:text-lg">
-                  Confirm Password
-                </span>
-              </label>
-              <input
-                type="password"
-                placeholder="********"
-                value={user.confirmPassword}
-                onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
-                className="input input-bordered input-primary w-full dark:bg-gray-700 dark:text-white"
+                required
               />
             </div>
 
@@ -134,4 +118,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;

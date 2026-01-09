@@ -1,23 +1,24 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessages } from "../redux/messageSlice";
+import { setMessages, setLoading } from "../redux/messageSlice";
 
 const useGetMessages = () => {
   const { selectedUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedUser?._id) {
-        console.log("No user selected yet, not fetching messages");
-        return; // 🛑 Stop if no user selected
+        dispatch(setMessages([]));
+        return;
       }
+      
+      dispatch(setLoading(true));
       try {
         const res = await axios.get(
-          `${API_URL}/api/v1/message/getm/${selectedUser?._id}` ,
+          `${API_URL}/api/v1/message/getm/${selectedUser?._id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -25,15 +26,16 @@ const useGetMessages = () => {
             withCredentials: true,
           }
         );
-        // console.log(res);
-        console.log(res?.data?.data?.messages);
-        dispatch(setMessages(res?.data?.data?.messages || []))
+        dispatch(setMessages(res?.data?.data?.messages || []));
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching messages:", error);
+        dispatch(setMessages([]));
+      } finally {
+        dispatch(setLoading(false));
       }
     };
     fetchMessages();
-  }, [selectedUser]);
+  }, [selectedUser, dispatch]);
 };
 
 export default useGetMessages;

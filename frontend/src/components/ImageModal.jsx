@@ -1,4 +1,5 @@
 import React from "react";
+import { getOptimizedFullImage } from "../utils/imageOptimizer";
 
 const ImageModal = ({ isOpen, onClose, imageUrl }) => {
   if (!isOpen) return null;
@@ -14,9 +15,11 @@ const ImageModal = ({ isOpen, onClose, imageUrl }) => {
           ✕
         </button>
         <img
-          src={imageUrl}
+          src={getOptimizedFullImage(imageUrl) || imageUrl}
           alt="Full View"
           className="max-w-full max-h-screen"
+          loading="eager"
+          decoding="async"
         />
       </div>
     </div>

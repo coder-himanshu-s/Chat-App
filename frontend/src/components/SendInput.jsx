@@ -93,7 +93,6 @@ const SendInput = () => {
     const buffer = new ArrayBuffer(length);
     const view = new DataView(buffer);
     let offset = 0;
-    let pos = 0;
 
     // Write WAV header
     // "RIFF" identifier
@@ -230,10 +229,15 @@ const SendInput = () => {
           }
         );
 
-        dispatch(setMessages([...(messages || []), res?.data?.data]));
+        // Optimistically add message to state
+        const newMessage = res?.data?.data;
+        if (newMessage) {
+          dispatch(setMessages([...(messages || []), newMessage]));
+        }
         setMessage("");
         setFile(null);
         setAudioBlob(null);
+        fileInputRef.current.value = ""; // Clear file input
       }
     } catch (error) {
       console.error("Error in submission:", error);
@@ -296,7 +300,7 @@ const SendInput = () => {
 
   return (
     <form
-      className="flex items-center px-4 py-3 bg-white dark:bg-gray-800 rounded-b-lg gap-2"
+      className="flex items-center px-2 sm:px-4 py-2 sm:py-3 bg-white dark:bg-gray-800 gap-2"
       onSubmit={onSubmitHandler}
     >
       {/* 📎 Attach Button */}
@@ -323,9 +327,9 @@ const SendInput = () => {
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Send a message..."
-        className="flex-grow px-4 py-2 text-sm rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
-        disabled={isUploading}
+        placeholder="Type a message..."
+        className="flex-grow px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 dark:focus:ring-indigo-500"
+        disabled={isUploading || isProcessingAudio}
       />
 
       {/* File Info Display */}
