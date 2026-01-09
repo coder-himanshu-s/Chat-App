@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 const errorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
+    console.error(err);
     return res.status(err.statusCode).json({
       success: false,
       message: err.message,
@@ -12,12 +13,17 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Fallback for any unhandled error
-  return res.status(500).json({
+  console.error(err);
+  const response = {
     success: false,
-    message: "Internal Server Error",
+    message: process.env.NODE_ENV === "production" ? "Internal Server Error" : (err.message || "Internal Server Error"),
     errors: [],
     data: null,
-  });
+  };
+  if (process.env.NODE_ENV !== "production") {
+    response.stack = err.stack;
+  }
+  return res.status(500).json(response);
 };
 
 export default errorHandler;

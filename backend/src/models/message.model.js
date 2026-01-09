@@ -19,6 +19,19 @@ const messageSchema = new mongoose.Schema(
     file: {
       type: String, 
       default: null,
+    },
+    status: {
+      type: String,
+      enum: ["sent", "delivered", "seen"],
+      default: "sent",
+    },
+    deliveredAt: {
+      type: Date,
+      default: null,
+    },
+    seenAt: {
+      type: Date,
+      default: null,
     }
   },
   {

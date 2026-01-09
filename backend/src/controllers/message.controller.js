@@ -23,7 +23,8 @@ export const sendMessage = asyncHandler(async (req, res) => {
       senderId,
       receiverId,
       message,
-      file, // ✅ added
+      file,
+      status: "sent", // Start with "sent" status
     });
   
     if (newMessage) {
@@ -34,9 +35,32 @@ export const sendMessage = asyncHandler(async (req, res) => {
   
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
+      // Mark as delivered immediately if receiver is online
+      newMessage.status = "delivered";
+      newMessage.deliveredAt = new Date();
+      await newMessage.save();
+      
       io.to(receiverSocketId).emit("newMessage", newMessage);
+      // Notify sender that message was delivered
+      const senderSocketId = getReceiverSocketId(senderId);
+      if (senderSocketId) {
+        io.to(senderSocketId).emit("messageStatusUpdate", {
+          messageId: newMessage._id,
+          status: "delivered",
+          deliveredAt: newMessage.deliveredAt
+        });
+      }
+    } else {
+      // If receiver is offline, notify sender that message is sent
+      const senderSocketId = getReceiverSocketId(senderId);
+      if (senderSocketId) {
+        io.to(senderSocketId).emit("messageStatusUpdate", {
+          messageId: newMessage._id,
+          status: "sent"
+        });
+      }
     }
-  
+
     return res
       .status(201)
       .json(new ApiResponse(201, newMessage, "Message sent successfully"));
@@ -49,8 +73,51 @@ export const getMessage = asyncHandler(async (req, res) => {
 
     const chat = await Chat.findOne({
         participants: { $all: [senderId, receiverId] }
-    }).populate("messages")
+    }).populate({
+        path: "messages",
+        options: { sort: { createdAt: 1 } }
+    });
 
+    const messages = chat?.messages || [];
 
-    return res.status(200).json(new ApiResponse(200, chat, "Messages fetched successfully"))
-})
+    return res.status(200).json(new ApiResponse(200, { messages }, "Messages fetched successfully"))
+});
+
+export const markMessagesAsSeen = asyncHandler(async (req, res) => {
+    const receiverId = req.user._id; // Current user viewing messages
+    const senderId = req.params.id; // The other user in the chat
+
+    // Mark all messages from sender to receiver as seen
+    const updatedMessages = await Message.updateMany(
+        {
+            senderId,
+            receiverId,
+            status: { $ne: "seen" }
+        },
+        {
+            $set: {
+                status: "seen",
+                seenAt: new Date()
+            }
+        }
+    );
+
+    // Get updated messages to send to sender
+    const messages = await Message.find({
+        senderId,
+        receiverId,
+        status: "seen"
+    }).sort({ createdAt: -1 }).limit(10);
+
+    // Notify sender that messages were seen
+    const senderSocketId = getReceiverSocketId(senderId);
+    if (senderSocketId && messages.length > 0) {
+        io.to(senderSocketId).emit("messagesSeen", {
+            receiverId,
+            messageIds: messages.map(m => m._id),
+            seenAt: new Date()
+        });
+    }
+
+    return res.status(200).json(new ApiResponse(200, { updatedCount: updatedMessages.modifiedCount }, "Messages marked as seen"));
+});

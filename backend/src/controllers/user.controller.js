@@ -4,11 +4,12 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/AsyncHandler.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { io } from "../../socket/socket.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { fullName, userName, password, confirmPassword, gender } = req.body;
   if (!fullName || !userName || !password || !confirmPassword || !gender) {
-    return new ApiResponse(400, {}, "All fields are required");
+    throw new ApiError(400, "All fields are required");
   }
   if (password !== confirmPassword) {
     throw new ApiError(400, "Password and confirm password must be same");
@@ -29,6 +30,10 @@ export const register = asyncHandler(async (req, res) => {
   });
   const userWithoutPassword = user.toObject();
   delete userWithoutPassword.password;
+  
+  // Emit new user event to all connected clients
+  io.emit("newUser", userWithoutPassword);
+  
   return res
     .status(200)
     .json(new ApiResponse(200, userWithoutPassword, "User registered successfully"));
@@ -99,6 +104,13 @@ export const logout = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, {}, "Logged Out Sucessfully"));
+});
+
+export const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const userWithoutPassword = user.toObject();
+  delete userWithoutPassword.password;
+  return res.status(200).json(new ApiResponse(200, userWithoutPassword, "User fetched successfully"));
 });
 
 export const getOtherUsers = asyncHandler(async (req, res) => {
