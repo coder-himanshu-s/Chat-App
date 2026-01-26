@@ -15,14 +15,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://chat-app-2-l366.onrender.com",
+// Allow localhost/127.0.0.1 on any port and production URL
+const allowedOriginPatterns = [
+  /^https:\/\/chat-app-2-l366\.onrender\.com$/,
+  /^http:\/\/localhost(:\d+)?$/,
+  /^http:\/\/127\.0\.0\.1(:\d+)?$/,
 ];
 
 const corsOptions = {
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. Postman, mobile apps, same-origin)
+    if (!origin) return callback(null, true);
+    const allowed = allowedOriginPatterns.some((p) => p.test(origin));
+    if (allowed) return callback(null, true);
+    callback(null, false);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 app.use(cors(corsOptions));

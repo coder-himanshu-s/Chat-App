@@ -6,15 +6,22 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://chat-app-2-l366.onrender.com",
+// Match Express CORS: localhost/127.0.0.1 any port + production
+const allowedOriginPatterns = [
+  /^https:\/\/chat-app-2-l366\.onrender\.com$/,
+  /^http:\/\/localhost(:\d+)?$/,
+  /^http:\/\/127\.0\.0\.1(:\d+)?$/,
 ];
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
-    methods: ["GET", "POST"],
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const allowed = allowedOriginPatterns.some((p) => p.test(origin));
+      callback(null, allowed);
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   },
 });
