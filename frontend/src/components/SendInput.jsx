@@ -5,6 +5,7 @@ import { FiPaperclip } from "react-icons/fi";
 import { FaMicrophone, FaStop } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages } from "../redux/messageSlice";
+import { API_URL } from "../config/api.config";
 
 const SendInput = () => {
   const [message, setMessage] = useState("");
@@ -18,7 +19,6 @@ const SendInput = () => {
   const fileInputRef = useRef(null);
 
   const dispatch = useDispatch();
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   const { selectedUser } = useSelector((store) => store.user);
   const receiverId = selectedUser?._id;

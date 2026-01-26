@@ -14,6 +14,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { setSocket } from "./redux/socketSlice";
 import { setOnlineUsers, setAuthUser } from "./redux/userSlice";
+import { API_URL } from "./config/api.config";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,7 +29,6 @@ const router = createBrowserRouter(
 function App() {
   const { authUser } = useSelector((store) => store.user);
   const { socket } = useSelector((store) => store.socket);
-  const socketURL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const dispatch = useDispatch();
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -38,7 +38,6 @@ function App() {
       const token = localStorage.getItem("accessToken");
       if (token && !authUser) {
         try {
-          const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
           const res = await axios.get(`${API_URL}/api/v1/user/me`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -62,10 +61,11 @@ function App() {
 
   useEffect(() => {
     if (authUser) {
-      const socketio = io(socketURL, {
+      const socketio = io(API_URL, {
         query: {
           userId: authUser._id,
         },
+        withCredentials: true,
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,

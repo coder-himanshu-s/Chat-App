@@ -3,12 +3,12 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setOtherUsers, setLoadingUsers } from "../redux/userSlice";
 import store from "../redux/store.js";
+import { API_URL } from "../config/api.config";
 
 const useGetOtherUsers = () => {
   const dispatch = useDispatch();
   const { authUser } = useSelector((store) => store.user);
   const { socket } = useSelector((store) => store.socket);
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   
   useEffect(() => {
     if (!authUser) {

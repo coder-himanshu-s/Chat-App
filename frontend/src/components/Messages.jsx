@@ -4,6 +4,7 @@ import useGetMessages from "../hooks/useGetMessages";
 import { useSelector } from "react-redux";
 import useGetRealTimeMessage from "../hooks/useGetRealTimeMessage";
 import axios from "axios";
+import { API_URL } from "../config/api.config";
 
 const Messages = () => {
   useGetMessages();
@@ -40,7 +41,6 @@ const Messages = () => {
       hasMarkedAsSeen.current = true;
       const markAsSeen = async () => {
         try {
-          const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
           await axios.put(
             `${API_URL}/api/v1/message/seen/${selectedUser._id}`,
             {},

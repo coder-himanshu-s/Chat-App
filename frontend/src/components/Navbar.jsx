@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { setAuthUser } from "../redux/userSlice";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { API_URL } from "../config/api.config";
 
 const Navbar = () => {
   const { authUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const [isDark, setIsDark] = useState(false);
 
   // Initialize theme on component mount

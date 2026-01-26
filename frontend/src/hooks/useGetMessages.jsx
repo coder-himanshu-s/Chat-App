@@ -2,11 +2,11 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMessages, setLoading } from "../redux/messageSlice";
+import { API_URL } from "../config/api.config";
 
 const useGetMessages = () => {
   const { selectedUser } = useSelector((store) => store.user);
   const dispatch = useDispatch();
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
   useEffect(() => {
     const fetchMessages = async () => {

@@ -1,6 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setMessages, updateMessageStatus, markMessagesAsSeen } from "../redux/messageSlice";
+import {
+  setMessages,
+  updateMessageStatus,
+  markMessagesAsSeen,
+} from "../redux/messageSlice";
 
 const useGetRealTimeMessage = () => {
   const { socket } = useSelector((store) => store.socket);
@@ -19,15 +23,17 @@ const useGetRealTimeMessage = () => {
 
     const handleNewMessage = (newMessage) => {
       const isRelevant =
-        (newMessage.senderId === selectedUser?._id && newMessage.receiverId === authUser?._id) ||
-        (newMessage.receiverId === selectedUser?._id && newMessage.senderId === authUser?._id);
+        (newMessage.senderId === selectedUser?._id &&
+          newMessage.receiverId === authUser?._id) ||
+        (newMessage.receiverId === selectedUser?._id &&
+          newMessage.senderId === authUser?._id);
 
       if (isRelevant) {
         // Check if message already exists to prevent duplicates
         const messageExists = messagesRef.current?.some(
           (msg) => msg._id === newMessage._id
         );
-        
+
         if (!messageExists) {
           dispatch(setMessages([...(messagesRef.current || []), newMessage]));
         }

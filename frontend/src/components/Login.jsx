@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setAuthUser } from "../redux/userSlice";
+import { API_URL } from "../config/api.config";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -12,7 +13,6 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

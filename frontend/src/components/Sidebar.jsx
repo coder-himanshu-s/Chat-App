@@ -7,11 +7,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAuthUser, setOtherUsers, setSelectedUser } from "../redux/userSlice";
 import { setMessages } from "../redux/messageSlice";
+import { API_URL } from "../config/api.config";
 
 const Sidebar = ({ onUserSelect }) => {
   const [search, setSearch] = useState("");
   const { authUser ,otherUsers } = useSelector((store) => store.user);
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
